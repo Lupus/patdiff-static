@@ -25,7 +25,7 @@ jobs:
       - name: Configure OPAM switch
         run: |
           opam init --bare --no-setup --bypass-checks --no-opamrc --disable-sandboxing
-          opam switch create 4.14.1 --packages=ocaml-option-static,ocaml.4.14.1 --no-depexts
+          opam switch create 5.3.0 --no-depexts
 
       - name: Install patdiff
         run: |
@@ -40,18 +40,10 @@ jobs:
           BIN_DIR=$(opam var bin)
           cp $BIN_DIR/patdiff $BIN_DIR/patdiff-git-wrapper artifacts/
 
-      - name: Generate checksums
-        run: |
-          cd artifacts
-          sha256sum patdiff > patdiff.sha256
-          sha256sum patdiff-git-wrapper > patdiff-git-wrapper.sha256
-
-      - name: Package release artifacts
-        run: |
-          tar czvf "patdiff-static-$(date +%Y%m%d).tar.gz" artifacts/*
-
-      - name: Upload artifacts
+      - name: Publish artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: patdiff-static-binaries
-          path: patdiff-static-*.tar.gz
+          name: patdiff
+          path: |
+            artifacts/patdiff
+            artifacts/patdiff-git-wrapper
