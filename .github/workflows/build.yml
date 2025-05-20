@@ -1,0 +1,52 @@
+name: Static patdiff Build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    container:
+      image: ocaml/opam:alpine-3.19-ocaml-5.1
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install build dependencies
+        run: sudo apk add --no-cache build-base
+
+      - name: Configure static build environment
+        run: |
+          opam switch create static_build ocaml-base-compiler.5.1.0 \
+            --packages=ocaml-option-static,ocaml-option-musl
+          eval $(opam env)
+
+      - name: Install patdiff
+        run: opam install patdiff --yes --assume-depexts
+
+      - name: Prepare artifacts directory
+        run: mkdir -p artifacts
+
+      - name: Extract binaries
+        run: |
+          BIN_DIR=$(opam var bin)
+          cp $BIN_DIR/patdiff $BIN_DIR/patdiff-git-wrapper artifacts/
+
+      - name: Generate checksums
+        run: |
+          cd artifacts
+          sha256sum patdiff > patdiff.sha256
+          sha256sum patdiff-git-wrapper > patdiff-git-wrapper.sha256
+
+      - name: Package release artifacts
+        run: |
+          tar czvf "patdiff-static-$(date +%Y%m%d).tar.gz" artifacts/*
+
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: patdiff-static-binaries
+          path: patdiff-static-*.tar.gz
