@@ -14,7 +14,7 @@ jobs:
       options: --user root  # Run as root to avoid permission issues
     steps:
       - name: Install build dependencies
-        run: apk add --no-cache build-base musl-dev curl ca-certificates openssl
+        run: apk add --no-cache build-base musl-dev curl ca-certificates openssl linux-headers
 
       - name: Install OPAM
         run: |
