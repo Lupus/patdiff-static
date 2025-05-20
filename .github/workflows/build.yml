@@ -12,9 +12,6 @@ jobs:
     container:
       image: ocaml/opam:alpine-3.19-ocaml-5.1
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-
       - name: Install build dependencies
         run: sudo apk add --no-cache build-base
 
