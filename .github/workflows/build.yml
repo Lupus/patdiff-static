@@ -25,7 +25,7 @@ jobs:
       - name: Configure OPAM switch
         run: |
           opam init --bare --no-setup --bypass-checks --no-opamrc --disable-sandboxing
-          opam switch create 4.14.1 --packages=ocaml-option-static --no-depexts
+          opam switch create 4.14.1 --packages=ocaml-option-static,ocaml.4.14.1 --no-depexts
 
       - name: Install patdiff
         run: |
