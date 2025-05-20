@@ -11,6 +11,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: ocaml/opam:alpine-3.19-ocaml-5.1
+      options: --user root  # Run as root to avoid permission issues
     steps:
       - name: Install build dependencies
         run: sudo apk add --no-cache build-base
