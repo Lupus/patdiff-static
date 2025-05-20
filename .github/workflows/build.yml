@@ -28,7 +28,9 @@ jobs:
           opam switch create 5.3.0 --packages=ocaml-option-musl --no-depexts
 
       - name: Install patdiff
-        run: opam install patdiff --yes
+        run: |
+          opam update
+          opam install patdiff --yes --no-depexts
 
       - name: Prepare artifacts directory
         run: mkdir -p artifacts
